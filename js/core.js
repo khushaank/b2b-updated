@@ -97,6 +97,7 @@ const serviceNavigationReady = navigation && serviceBar
     let activeCategory = serviceCategories[0];
     let closeTimer;
     let hoverTimer;
+    let clickLocked = false;
     let suppressFocusOpen = false;
 
     const renderCategory = (category) => {
@@ -121,13 +122,17 @@ const serviceNavigationReady = navigation && serviceBar
 
     const setMegaMenu = (open) => {
       clearTimeout(closeTimer);
+      if (!open) clearTimeout(hoverTimer);
       if (open && window.innerWidth <= 960) return;
+      if (!open) clickLocked = false;
       serviceBar.classList.toggle('mega-open', open);
       document.body.classList.toggle('mega-menu-open', open);
       servicesTrigger.setAttribute('aria-expanded', String(open));
       megaMenu.setAttribute('aria-hidden', String(!open));
     };
-    const scheduleClose = () => { closeTimer = setTimeout(() => setMegaMenu(false), 220); };
+    const scheduleClose = () => {
+      if (!clickLocked) closeTimer = setTimeout(() => setMegaMenu(false), 320);
+    };
     const scheduleCategory = (category) => {
       clearTimeout(hoverTimer);
       hoverTimer = setTimeout(() => renderCategory(category), 90);
@@ -170,10 +175,18 @@ const serviceNavigationReady = navigation && serviceBar
     serviceBar.addEventListener('focusout', (event) => {
       if (!serviceBar.contains(event.relatedTarget)) scheduleClose();
     });
+    [...navigation.children].filter((item) => item.matches('a') && item !== servicesTrigger).forEach((link) => {
+      link.addEventListener('mouseenter', () => setMegaMenu(false));
+      link.addEventListener('focus', () => setMegaMenu(false));
+    });
+    megaMenu.addEventListener('click', (event) => {
+      if (event.target.closest('a')) setMegaMenu(false);
+    });
     servicesTrigger.addEventListener('click', (event) => {
       event.preventDefault();
       if (window.innerWidth > 960) {
-        setMegaMenu(true);
+        clickLocked = !clickLocked;
+        setMegaMenu(clickLocked);
         return;
       }
       const open = !mobileServices.classList.contains('is-open');
@@ -206,7 +219,9 @@ const serviceNavigationReady = navigation && serviceBar
         suppressFocusOpen = false;
       }
     });
-    window.addEventListener('scroll', () => setMegaMenu(false), { passive: true });
+    window.addEventListener('scroll', () => {
+      if (!clickLocked) setMegaMenu(false);
+    }, { passive: true });
     window.addEventListener('resize', () => {
       setMegaMenu(false);
       if (window.innerWidth > 960) {
