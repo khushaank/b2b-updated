@@ -697,7 +697,8 @@ document.querySelectorAll('.protected-email[data-user][data-domain][data-tld]').
 
 document.querySelectorAll('img').forEach((image) => {
   image.draggable = false;
-  if (!image.hasAttribute('loading') && !image.closest('.page-header, .blog-post-hero, .client-hero')) image.loading = 'lazy';
+  const hasDimensions = Number(image.getAttribute('width')) > 0 && Number(image.getAttribute('height')) > 0;
+  if (!image.hasAttribute('loading') && hasDimensions && !image.closest('.site-header, .page-header, .blog-post-hero, .client-hero')) image.loading = 'lazy';
 });
 
 document.querySelectorAll('.legacy-content > .page-header').forEach((hero) => {

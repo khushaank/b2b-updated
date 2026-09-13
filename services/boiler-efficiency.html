@@ -18,8 +18,8 @@
   <link rel="canonical" href="https://b2bindustrial.in/services/boiler-efficiency">
   <link rel="alternate" hreflang="en-IN" href="https://b2bindustrial.in/services/boiler-efficiency">
   <link rel="manifest" href="../site.webmanifest">
-  <link rel="icon" href="https://b2bindustrial.in/favicon.png" type="image/png" sizes="318x318">
-  <link rel="apple-touch-icon" href="https://b2bindustrial.in/favicon.png">
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="318x318">
+  <link rel="apple-touch-icon" href="/favicon.png">
   <meta name="msapplication-config" content="../browserconfig.xml">
   <link rel="alternate" type="application/rss+xml" title="B2B Industrial Insights"
     href="https://b2bindustrial.in/rss.xml">
@@ -379,6 +379,7 @@
             <h3>Request a Boiler Audit</h3>
             <p>Contact our experts for a detailed performance analysis.</p>
             <form action="https://api.web3forms.com/submit" method="POST">
+              <input type="hidden" name="Source page URL" data-source-page-url value="https://b2bindustrial.in/services/boiler-efficiency" />
               <input type="hidden" name="access_key" value="37c7915d-f633-4c37-b45f-c670fe70ea2b" />
               <input type="checkbox" name="botcheck" class="hidden" style="display: none" />
               <input type="hidden" name="redirect" value="https://b2bindustrial.in/success" />
@@ -387,19 +388,23 @@
 
 
               <div class="form-group">
-                <input type="text" name="name" placeholder="Your Full Name" class="form-control" required
+                <label for="boiler-name" class="form-label">Full Name</label>
+                <input type="text" id="boiler-name" name="name" placeholder="Your Full Name" class="form-control" required
                   autocomplete="name" />
               </div>
               <div class="form-group">
-                <input type="email" name="email" placeholder="Business Email" class="form-control" required
+                <label for="boiler-email" class="form-label">Business Email</label>
+                <input type="email" id="boiler-email" name="email" placeholder="Business Email" class="form-control"
                   autocomplete="email" />
               </div>
               <div class="form-group">
-                <input type="text" name="phone" placeholder="Phone Number" class="form-control" required
+                <label for="boiler-phone" class="form-label">Phone Number</label>
+                <input type="tel" id="boiler-phone" name="phone" placeholder="Phone Number" class="form-control" required
                   autocomplete="tel" />
               </div>
               <div class="form-group">
-                <select name="boiler_type" class="form-control" required autocomplete="off">
+                <label for="boiler-type" class="form-label">Boiler Type</label>
+                <select id="boiler-type" name="boiler_type" class="form-control" required autocomplete="off">
                   <option value="" disabled selected>
                     Select Boiler Type
                   </option>
@@ -410,7 +415,8 @@
                 </select>
               </div>
               <div class="form-group">
-                <textarea name="message" placeholder="Describe your current fuel consumption or scaling issues..."
+                <label for="boiler-message" class="form-label">Your Requirement</label>
+                <textarea id="boiler-message" name="message" placeholder="Describe your current fuel consumption or scaling issues..."
                   class="form-control" rows="4" required autocomplete="off"></textarea>
               </div>
               <button type="submit" class="btn-primary btn-block">

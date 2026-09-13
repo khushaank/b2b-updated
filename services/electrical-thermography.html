@@ -18,8 +18,8 @@
   <link rel="canonical" href="https://b2bindustrial.in/services/electrical-thermography">
   <link rel="alternate" hreflang="en-IN" href="https://b2bindustrial.in/services/electrical-thermography">
   <link rel="manifest" href="../site.webmanifest">
-  <link rel="icon" href="https://b2bindustrial.in/favicon.png" type="image/png" sizes="318x318">
-  <link rel="apple-touch-icon" href="https://b2bindustrial.in/favicon.png">
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="318x318">
+  <link rel="apple-touch-icon" href="/favicon.png">
   <meta name="msapplication-config" content="../browserconfig.xml">
   <link rel="alternate" type="application/rss+xml" title="B2B Industrial Insights"
     href="https://b2bindustrial.in/rss.xml">
@@ -366,6 +366,7 @@
             <h3>Book a Thermal Scan</h3>
             <p>Find hotspots instantly.</p>
             <form action="https://api.web3forms.com/submit" method="POST">
+              <input type="hidden" name="Source page URL" data-source-page-url value="https://b2bindustrial.in/services/electrical-thermography" />
               <input type="hidden" name="access_key" value="37c7915d-f633-4c37-b45f-c670fe70ea2b" />
               <input type="checkbox" name="botcheck" class="hidden" style="display: none" />
               <input type="hidden" name="redirect" value="https://b2bindustrial.in/success" />
@@ -380,8 +381,11 @@
               </div>
               <div class="form-group">
                 <label for="email" class="form-label">Work Email</label>
-                <input type="email" name="email" id="email" class="form-control" placeholder="email@company.com"
-                  required autocomplete="email" />
+                <input type="email" name="email" id="email" class="form-control" placeholder="email@company.com" autocomplete="email" />
+              </div>
+              <div class="form-group">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" name="phone" id="phone" class="form-control" placeholder="+91 98765 43210" required autocomplete="tel" inputmode="tel" />
               </div>
               <div class="form-group">
                 <label for="asset-type" class="form-label">Asset to Scan</label>

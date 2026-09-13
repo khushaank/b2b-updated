@@ -849,6 +849,12 @@ button.is-sending {
   pointer-events: none;
 }
 
+.required-marker {
+  margin-left: .18em;
+  color: #b42318;
+  font-weight: 800;
+}
+
 button.is-sending::before {
   content: "";
   width: 1em;

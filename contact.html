@@ -18,8 +18,8 @@
   <link rel="canonical" href="https://b2bindustrial.in/contact">
   <link rel="alternate" hreflang="en-IN" href="https://b2bindustrial.in/contact">
   <link rel="manifest" href="./site.webmanifest">
-  <link rel="icon" href="https://b2bindustrial.in/favicon.png" type="image/png" sizes="318x318">
-  <link rel="apple-touch-icon" href="https://b2bindustrial.in/favicon.png">
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="318x318">
+  <link rel="apple-touch-icon" href="/favicon.png">
   <meta name="msapplication-config" content="./browserconfig.xml">
   <link rel="alternate" type="application/rss+xml" title="B2B Industrial Insights"
     href="https://b2bindustrial.in/rss.xml">
@@ -288,6 +288,7 @@
         <div class="contact-form-panel" id="form">
           <form action="https://api.web3forms.com/submit" method="POST" class="modern-form contact-step-form"
             data-smart-contact-form novalidate>
+            <input type="hidden" name="Source page URL" data-source-page-url value="https://b2bindustrial.in/contact" />
             <input type="hidden" name="access_key" value="37c7915d-f633-4c37-b45f-c670fe70ea2b" />
             <input type="hidden" name="redirect" value="https://b2bindustrial.in/success" />
             <input type="hidden" name="subject" value="New Website Inquiry - Contact Page" />
@@ -313,15 +314,14 @@
                   <small class="field-error" id="name-error" data-error></small>
                 </div>
                 <div class="step-field">
-                  <label for="company">Company or organisation <span>(optional)</span></label>
+                  <label for="company">Company or organisation</label>
                   <input type="text" id="company" name="company" placeholder="Company or organisation"
                     autocomplete="organization" aria-describedby="company-error" />
                   <small class="field-error" id="company-error" data-error></small>
                 </div>
                 <div class="step-field">
                   <label for="email">Email</label>
-                  <input type="email" id="email" name="email" placeholder="name@company.com" autocomplete="email"
-                    required aria-describedby="email-error" />
+                  <input type="email" id="email" name="email" placeholder="name@company.com" autocomplete="email" aria-describedby="email-error" />
                   <small class="field-error" id="email-error" data-error></small>
                 </div>
                 <div class="step-field">
@@ -379,7 +379,7 @@
 
             <div class="step-form-actions">
               <button type="button" class="step-back" data-step-back hidden>Back</button>
-              <button type="button" class="step-next" data-step-next disabled>Continue</button>
+              <button type="button" class="step-next" data-step-next>Continue</button>
               <button type="submit" class="step-submit" data-step-submit hidden>Send enquiry</button>
             </div>
           </form>

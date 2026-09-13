@@ -328,18 +328,39 @@ document.querySelectorAll('form[action*="api.web3forms.com/submit"]').forEach((f
     if (!field.hasAttribute('maxlength')) field.maxLength = 100;
   });
   form.querySelectorAll('input[type="email"]').forEach((field) => {
+    field.required = false;
+    field.removeAttribute('aria-required');
     if (!field.hasAttribute('maxlength')) field.maxLength = 254;
   });
-  form.querySelectorAll('input[type="tel"]').forEach((field) => {
+  form.querySelectorAll('input[type="tel"], input[name="phone"]').forEach((field) => {
+    field.required = true;
+    field.setAttribute('aria-required', 'true');
     if (!field.hasAttribute('minlength')) field.minLength = 8;
     if (!field.hasAttribute('maxlength')) field.maxLength = 20;
     if (!field.hasAttribute('pattern')) field.pattern = '[0-9+() \\-]{8,20}';
+  });
+  form.querySelectorAll('input[required], select[required], textarea[required]').forEach((field) => {
+    const label = field.type === 'radio'
+      ? field.closest('fieldset')?.querySelector('legend')
+      : field.labels?.[0] || field.closest('label');
+    if (!label || label.querySelector('.required-marker')) return;
+    const marker = document.createElement('span');
+    marker.className = 'required-marker';
+    marker.setAttribute('aria-hidden', 'true');
+    marker.textContent = ' *';
+    const control = label.querySelector('input, select, textarea');
+    if (control) label.insertBefore(marker, control);
+    else label.append(marker);
   });
   form.querySelectorAll('textarea').forEach((field) => {
     if (!field.hasAttribute('minlength')) field.minLength = 10;
     if (!field.hasAttribute('maxlength')) field.maxLength = 2000;
   });
   const source = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  const sourcePageUrl = new URL(window.location.href);
+  sourcePageUrl.hash = '';
+  const sourcePageField = form.querySelector('[data-source-page-url]');
+  if (sourcePageField) sourcePageField.value = sourcePageUrl.href;
   const label = getPageLabel();
   const redirect = form.querySelector('input[name="redirect"]');
   if (redirect?.value) {
@@ -472,6 +493,7 @@ document.querySelectorAll('[data-smart-contact-form]').forEach((form) => {
   const setStatus = (message = '', type = '') => {
     if (!status) return;
     status.textContent = message;
+    status.setAttribute('role', type === 'error' ? 'alert' : 'status');
     status.classList.toggle('success', type === 'success');
     status.classList.toggle('error', type === 'error');
   };
@@ -491,6 +513,12 @@ document.querySelectorAll('[data-smart-contact-form]').forEach((form) => {
   const phoneIsValid = (value) => {
     const digits = String(value || '').replace(/\D/g, '');
     return digits.length >= 7 && digits.length <= 15;
+  };
+
+  const fieldLabel = (field) => {
+    if (field.type === 'radio') return field.closest('fieldset')?.querySelector('legend')?.textContent?.trim() || 'service';
+    const label = field.labels?.[0] || field.closest('label');
+    return label?.textContent?.replace('*', '').replace(/\s+/g, ' ').trim() || field.name || 'this field';
   };
 
   const escapeHtml = (value) => String(value || '')
@@ -573,7 +601,7 @@ document.querySelectorAll('[data-smart-contact-form]').forEach((form) => {
     }
     if (nextButton) {
       nextButton.hidden = stepIndex === totalSteps - 1;
-      nextButton.disabled = !validateStep(activeStep, false) || submitting;
+      nextButton.disabled = submitting;
     }
     if (submitButton) {
       submitButton.hidden = stepIndex !== totalSteps - 1;
@@ -587,7 +615,14 @@ document.querySelectorAll('[data-smart-contact-form]').forEach((form) => {
   const goNext = () => {
     if (submitting) return;
     const step = currentStep();
-    if (!validateStep(step, true)) return;
+    if (!validateStep(step, true)) {
+      const missing = [...step.querySelectorAll('[aria-invalid="true"]')]
+        .map(fieldLabel)
+        .filter((label, index, labels) => labels.indexOf(label) === index);
+      setStatus(`Please complete: ${missing.join(', ')}.`, 'error');
+      step.querySelector('[aria-invalid="true"]')?.focus({ preventScroll: true });
+      return;
+    }
     showStep(stepIndex + 1);
   };
 
@@ -604,13 +639,15 @@ document.querySelectorAll('[data-smart-contact-form]').forEach((form) => {
   };
 
   form.addEventListener('input', () => {
-    validateStep(currentStep(), false);
-    if (nextButton && stepIndex < totalSteps - 1) nextButton.disabled = !validateStep(currentStep(), false) || submitting;
+    const showErrors = Boolean(currentStep()?.querySelector('[aria-invalid="true"]'));
+    if (validateStep(currentStep(), showErrors) && showErrors) setStatus();
+    if (nextButton && stepIndex < totalSteps - 1) nextButton.disabled = submitting;
   });
 
   form.addEventListener('change', () => {
-    validateStep(currentStep(), false);
-    if (nextButton && stepIndex < totalSteps - 1) nextButton.disabled = !validateStep(currentStep(), false) || submitting;
+    const showErrors = Boolean(currentStep()?.querySelector('[aria-invalid="true"]'));
+    if (validateStep(currentStep(), showErrors) && showErrors) setStatus();
+    if (nextButton && stepIndex < totalSteps - 1) nextButton.disabled = submitting;
   });
 
   nextButton?.addEventListener('click', goNext);
@@ -678,7 +715,7 @@ document.querySelectorAll('[data-smart-contact-form]').forEach((form) => {
         submitButton.textContent = 'Send enquiry';
       }
       if (backButton) backButton.disabled = false;
-      if (nextButton && stepIndex < totalSteps - 1) nextButton.disabled = !validateStep(currentStep(), false);
+      if (nextButton && stepIndex < totalSteps - 1) nextButton.disabled = false;
       setStatus('We could not send the enquiry right now. Please check your connection and try again, or call us directly.', 'error');
     }
   });
@@ -775,7 +812,8 @@ document.querySelectorAll('.protected-email[data-user][data-domain][data-tld]').
 
 document.querySelectorAll('img').forEach((image) => {
   image.draggable = false;
-  if (!image.hasAttribute('loading') && !image.closest('.page-header, .blog-post-hero, .client-hero')) image.loading = 'lazy';
+  const hasDimensions = Number(image.getAttribute('width')) > 0 && Number(image.getAttribute('height')) > 0;
+  if (!image.hasAttribute('loading') && hasDimensions && !image.closest('.site-header, .page-header, .blog-post-hero, .client-hero')) image.loading = 'lazy';
 });
 
 document.querySelectorAll('.legacy-content > .page-header').forEach((hero) => {
